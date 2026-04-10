@@ -17,7 +17,7 @@ and automatically generates:
 The project is implemented using **Python (Flask)** for the backend and
 **HTML/CSS** for the frontend.
 
-Deployed on Render: https://nfa-to-dfa-visualizer.onrender.com
+Deployed on Render with Dockerfile: https://nfa-to-dfa-visualizer.onrender.com
 
 ------------------------------------------------------------------------
 
