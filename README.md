@@ -55,7 +55,7 @@ q1 1 q2
 
 Screenshot:
 
-![Input Page](frontend/screenshots/dasboard_ui.png)
+![Input Page](frontend/screenshots/dashboard_ui.png)
 
 ------------------------------------------------------------------------
 
@@ -100,7 +100,7 @@ The chatbot provides **interactive explanations**, making the tool both **educat
 
 ------------------------------------------------------------------------
 # Project Structure
-
+```
 project-root/
 │
 ├── backend/
@@ -126,7 +126,7 @@ project-root/
 ├── requirements.txt        # Python dependencies
 └── README.md               # Project documentation
 
-
+```
   
 
 ------------------------------------------------------------------------
