@@ -74,88 +74,94 @@ def chat():
     return render_template("chatbot.html", reply=reply_html)
 @app.route('/convert', methods = ['POST'])
 def convert(): # parses the input and extracts all information in required form, calls the other functions to display results
-    start = request.form['start']
-    final = [f.strip() for f in request.form['final'].split(',')]
-    transition_input = request.form['transitions']
-    transitions = {}
-    states = set()
-    alphabet = set()
-    errors = []
+    try:    
+        start = request.form['start']
+        final = [f.strip() for f in request.form['final'].split(',')]
+        transition_input = request.form['transitions']
+        transitions = {}
+        states = set()
+        alphabet = set()
+        errors = []
 
-    for i, line in enumerate(transition_input.strip().split("\n"), start=1):
+        for i, line in enumerate(transition_input.strip().split("\n"), start=1):
 
-        if not line.strip():
-            continue
+            if not line.strip():
+                continue
 
-        parts = line.split()
+            parts = line.split()
 
-        if len(parts) != 3:
-            errors.append(f"Line {i}: Invalid format → '{line}'")
-            continue
+            if len(parts) != 3:
+                errors.append(f"Line {i}: Invalid format → '{line}'")
+                continue
 
-        state, symbol, targets = parts
+            state, symbol, targets = parts
 
-        # Validate state
-        if not state.startswith("q"):
-            errors.append(f"Line {i}: Invalid state '{state}'")
+            # Validate state
+            if not state.startswith("q"):
+                errors.append(f"Line {i}: Invalid state '{state}'")
 
-        # Validate symbol
-        if len(symbol) != 1:
-            errors.append(f"Line {i}: Symbol must be single character → '{symbol}'")
+            # Validate symbol
+            if len(symbol) != 1:
+                errors.append(f"Line {i}: Symbol must be single character → '{symbol}'")
 
-        target_states = [t.strip() for t in targets.split(",")]
+            target_states = [t.strip() for t in targets.split(",")]
 
-        # Validate target states
-        for t in target_states:
-            if not t.startswith("q"):
-                errors.append(f"Line {i}: Invalid target state '{t}'")
+            # Validate target states
+            for t in target_states:
+                if not t.startswith("q"):
+                    errors.append(f"Line {i}: Invalid target state '{t}'")
 
-        # Only add if no errors for this line
-        if len(errors) == 0:
-            states.add(state)
-            states.update(target_states)
-            alphabet.add(symbol)
+            # Only add if no errors for this line
+            if len(errors) == 0:
+                states.add(state)
+                states.update(target_states)
+                alphabet.add(symbol)
 
-            if state not in transitions:
-                transitions[state] = {}
+                if state not in transitions:
+                    transitions[state] = {}
 
-            transitions[state][symbol] = target_states
+                transitions[state][symbol] = target_states
 
-    if errors:
-        return render_template("index.html", error=errors)
-    
-    states = list(states)
-    alphabet = list(alphabet)
+        if errors:
+            return render_template("index.html", error=errors)
+        
+        states = list(states)
+        alphabet = list(alphabet)
 
-    if start not in states:
-            raise ValueError("Start state not found in transitions")
+        if start not in states:
+                raise ValueError("Start state not found in transitions")
 
-    for f in final:
-                if f not in states:
-                    raise ValueError(f"Invalid final state: {f}")
+        for f in final:
+                    if f not in states:
+                        raise ValueError(f"Invalid final state: {f}")
 
 
-    dfa_transitions, steps = convert_nfa_to_dfa(states, alphabet, start, final, transitions)
-    dfa_start = start
-    draw_nfa(states, transitions, start, final)
-    draw_dfa(dfa_transitions, start, final)
-    dfa_text = format_dfa_as_text(dfa_transitions)
-     # -------- Store for Visualizer --------
-    global latest_steps, latest_dfa, latest_dfa_text, latest_dfa_start, latest_dfa_final
-    global latest_nfa_transitions, latest_nfa_states, latest_nfa_alphabet, latest_nfa_start, latest_nfa_final
-    latest_steps = steps
-    latest_dfa = dfa_transitions
-    latest_dfa_text = dfa_text
-    latest_dfa_start = dfa_start        
-    latest_dfa_final = final    
-    latest_nfa_transitions = transitions
-    latest_nfa_states = states
-    latest_nfa_alphabet = alphabet
-    latest_nfa_start = start
-    latest_nfa_final = final
+        dfa_transitions, steps = convert_nfa_to_dfa(states, alphabet, start, final, transitions)
+        dfa_start = start
+        draw_nfa(states, transitions, start, final)
+        draw_dfa(dfa_transitions, start, final)
+        dfa_text = format_dfa_as_text(dfa_transitions)
+        # -------- Store for Visualizer --------
+        global latest_steps, latest_dfa, latest_dfa_text, latest_dfa_start, latest_dfa_final
+        global latest_nfa_transitions, latest_nfa_states, latest_nfa_alphabet, latest_nfa_start, latest_nfa_final
+        latest_steps = steps
+        latest_dfa = dfa_transitions
+        latest_dfa_text = dfa_text
+        latest_dfa_start = dfa_start        
+        latest_dfa_final = final    
+        latest_nfa_transitions = transitions
+        latest_nfa_states = states
+        latest_nfa_alphabet = alphabet
+        latest_nfa_start = start
+        latest_nfa_final = final
 
-        # -------- Redirect to Visualizer --------
-    return redirect(url_for('visualizer'))
+            # -------- Redirect to Visualizer --------
+        return redirect(url_for('visualizer'))
+    except Exception as e:
+        import traceback
+        print("ERROR:", e)
+        print(traceback.format_exc())
+        return f"<pre>{traceback.format_exc()}</pre>"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
