@@ -1,0 +1,5 @@
+flask
+graphviz
+python-dotenv
+google-genai
+markdown

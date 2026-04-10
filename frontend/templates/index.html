@@ -1,0 +1,87 @@
+<!--
+The input given by the user might look like this:
+
+States: q0,q1,q2
+Alphabet: 0,1
+Start: q0
+Final: q2
+
+Transitions:
+q0 0 q0,q1
+q0 1 q0
+q1 1 q2
+-->
+
+<!DOCTYPE html>
+<html>
+    
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h2>NFA to DFA Converter</h2>
+<div class="warning-box">
+
+<h3>⚠ Input Format Instructions</h3>
+
+<ul>
+<li><b>Transition Table is mandatory</b></li>
+<li>Each line must follow format: <b>state symbol next_states</b></li>
+<li>Example: <b>q0 0 q0,q1</b></li>
+<li>States and alphabet will be automatically detected</li>
+<li>Invalid lines will cause an error</li>
+</ul>
+
+<p><b>Example:</b></p>
+
+<pre>
+q0 0 q0,q1
+q0 1 q0
+q1 1 q2
+</pre>
+
+</div>
+{% if error %}
+<div class="error-box">
+    <b>⚠ Invalid Input:</b>
+    <ul>
+        {% for err in error %}
+        <li>{{ err }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<form action="/convert" method="post">
+
+Start State:<br>
+<input type="text" name="start"><br><br>
+
+<label>Final State(s):</label><br>
+<input type="text" name="final" placeholder="q2">
+<p class="hint">Enter accepting states separated by commas.</p>
+
+<label>Transition Table:</label><br>
+
+<textarea name="transitions" rows="10" cols="50"
+placeholder="Format: state symbol next_states
+
+Example:
+q0 0 q0,q1
+q0 1 q0
+q1 1 q2"
+required></textarea>
+
+<p class="hint">
+Each line must follow: <b>state symbol next_states</b><br>
+• Separate multiple next states using commas<br>
+• No extra spaces or missing values allowed
+</p>
+<input type="submit" value="Convert">
+</form>
+
+
+</body>
+</html>

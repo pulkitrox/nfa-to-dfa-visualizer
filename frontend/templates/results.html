@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+<a href="/dashboard">⬅ Back to Dashboard</a>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<p><b>Legend:</b> → Start State &nbsp;&nbsp; * Final State</p>
+<h2>NFA Transition Table</h2>
+<table class="dfa-table">
+
+<tr>
+    <th>State</th>
+    {% for symbol in nfa_alphabet %}
+        <th>{{ symbol }}</th>
+    {% endfor %}
+</tr>
+
+{% for state in nfa_states %}
+<tr>
+
+<td>
+    {% if state == nfa_start %}
+        → {{ state }}
+    {% elif state in nfa_final %}
+        * {{ state }}
+    {% else %}
+        {{ state }}
+    {% endif %}
+</td>
+
+{% for symbol in nfa_alphabet %}
+<td>
+    {% if state in nfa_transitions and symbol in nfa_transitions[state] %}
+        {{ nfa_transitions[state][symbol] | sort | join(',') }}
+    {% else %}
+        ∅
+    {% endif %}
+</td>
+{% endfor %}
+
+</tr>
+{% endfor %}
+
+</table>
+
+<h2>Latest Generated NFA Graph</h2>
+
+<img src="{{ url_for('static', filename='nfa.png') }}">
+
+<h2>Latest Generated DFA Graph</h2>
+
+<img src="{{ url_for('static', filename='dfa.png') }}">
+
+<h2>Subset Construction Steps of Latest Transition Table</h2>
+
+<table border="1">
+
+<tr>
+<th>Current State</th>
+<th>Input</th>
+<th>Next State</th>
+</tr>
+
+{% for step in steps %}
+
+<tr>
+<td>
+{% if step.current_state|length == 0 %}
+    d
+{% else %}
+    {{ step.current_state | sort | join(',') }}
+{% endif %}
+</td>
+<td>{{step.symbol}}</td>
+<td>
+{% if step.next_state|length == 0 %}
+    d
+{% else %}
+    {{ step.next_state | sort | join(',') }}
+{% endif %}
+</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+<h2>DFA Transition Table</h2>
+
+<table class="dfa-table">
+
+    <!-- Header -->
+    <tr>
+    <th>State</th>
+
+    {% set first = dfa.values() | list | first %}
+    {% for symbol in first.keys() %}
+        <th>{{ symbol }}</th>
+    {% endfor %}
+</tr>
+
+    <!-- Rows -->
+    {% for state, transitions in dfa.items() %}
+    <tr>
+
+        <!-- Current State -->
+            <td>
+    {% if state|length == 0 %}
+        d
+    {% else %}
+
+        {% set state_str = state | sort | join(',') %}
+        {% set start_str = start_state | sort | join(',') %}
+        {% if state_str == start_str %}
+                → {{ state_str }}
+
+        {% elif state | select("in", final_states) | list | length > 0 %}
+            * {{ state_str }}
+
+        {% else %}
+            {{ state_str }}
+        {% endif %}
+    {% endif %}
+    </td>
+
+        <!-- Transitions -->
+        {% for symbol, next_state in transitions.items() %}
+        <td>
+            {% if next_state|length == 0 %}
+                d
+            {% else %}
+                {{ next_state | sort | join(',') }}
+            {% endif %}
+        </td>
+        {% endfor %}
+
+    </tr>
+    {% endfor %}
+
+</table>
+</body>
+</html>

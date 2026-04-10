@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Automata Chatbot</title>
+
+    <!-- Link to your existing CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <!-- Back Navigation -->
+    <a href="/dashboard" class="back-btn">⬅ Back to Dashboard</a>
+
+    <h2>Automata Chatbot</h2>
+
+    <!-- Chat Form -->
+    <form action="/chat" method="post">
+        <input type="text" name="question"
+        placeholder="Ask about NFA, DFA, subset construction..."
+        required>
+
+        <input type="submit" value="Ask">
+    </form>
+
+    <!-- Chat Output -->
+    {% if reply %}
+
+        <div class="user-question">
+            You asked: {{ request.form.question }}
+        </div>
+
+        <div class="chat-response">
+            <b>Answer:</b><br>
+            {{ reply|safe }}
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

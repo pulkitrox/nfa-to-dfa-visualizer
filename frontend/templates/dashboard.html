@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Automata Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- 🔹 SIDEBAR -->
+    <div class="sidebar">
+        <h3>Navigation</h3>
+
+        <a href="/input">➤ Input NFA</a>
+        <a href="/visualizer">➤ Visualizer</a>
+        <a href="/chatbot">➤ Chatbot</a>
+    </div>
+
+    <!-- 🔹 MAIN CONTENT -->
+    <div class="content">
+
+        <h1>Automata Theory Dashboard</h1>
+        <p>
+        This dashboard provides an overview of finite automata concepts and the working
+        of this NFA → DFA conversion tool.
+        </p>
+        <!-- ================= TOOL WORKFLOW ================= -->
+        <div class="section-card">
+            <h2>How This Tool Works</h2>
+
+            <ol>
+                <li>User inputs NFA via transition table</li>
+                <li>System constructs DFA using subset construction</li>
+                <li>Graphs are generated using Graphviz</li>
+                <li>Step-by-step transitions are displayed</li>
+                <li>DFA minimization to optimize the DFA</li>
+            </ol>
+        </div>
+        <div class="section-card">
+
+<h2>Formal Representation of Finite Automata (5-Tuple)</h2>
+
+<p>
+Both NFA and DFA are formally defined using a <b>5-tuple</b>, which provides a complete mathematical description of the automaton.
+</p>
+
+<h3>General Form</h3>
+
+<p><b>M = (Q, Σ, δ, q₀, F)</b></p>
+
+<ul>
+<li><b>Q</b>: Finite set of states</li>
+<li><b>Σ (Sigma)</b>: Input alphabet (set of symbols)</li>
+<li><b>δ (delta)</b>: Transition function</li>
+<li><b>q₀</b>: Start state</li>
+<li><b>F</b>: Set of final (accepting) states</li>
+</ul>
+
+</div>
+        <!-- ================= NFA ================= -->
+        <div class="section-card">
+            <h2>Non-Deterministic Finite Automaton (NFA)</h2>
+
+            <!-- 👉 Add image here -->
+            <img src="{{ url_for('static', filename='nfa_example.png') }}">
+
+            <p>
+            An NFA allows multiple transitions for the same input symbol from a state.
+            It may also include epsilon (ε) transitions.
+            </p>
+
+            <ul>
+                <li>One input → multiple possible states</li>
+                <li>Can include ε-transitions</li>
+                <li>Easy to design but not directly implementable</li>
+            </ul>
+
+            <h4>Formal Definition</h4>
+            <p>(Q, Σ, δ, q₀, F) where:</p>
+            <p><b>δ : Q × Σ → 2<sup>Q</sup></b></p>
+
+<ul>
+<li>For a given state and input, the result is a <b>set of possible states</b></li>
+<li>Multiple transitions are allowed</li>
+<li>May include ε-transitions (optional)</li>
+</ul>
+
+        </div>
+
+        <!-- ================= DFA ================= -->
+        <div class="section-card">
+            <h2>Deterministic Finite Automaton (DFA)</h2>
+
+            <!-- 👉 Add image here -->
+            <img src="{{ url_for('static', filename='dfa_example.png') }}">
+
+            <p>
+            A DFA has exactly one transition for each input symbol from every state.
+            </p>
+
+            <ul>
+                <li>No ambiguity in transitions</li>
+                <li>No epsilon transitions</li>
+                <li>Fully deterministic</li>
+            </ul>
+            <h4>Formal Definition</h4>
+
+<p><b>δ : Q × Σ → Q</b></p>
+
+<ul>
+<li>For every state and input, there is exactly <b>one next state</b></li>
+<li>No ambiguity in transitions</li>
+<li>No ε-transitions</li>
+</ul>
+        </div>
+
+        <!-- ================= CONVERSION ================= -->
+        <div class="section-card">
+            <h2>NFA to DFA Conversion (Subset Construction)</h2>
+
+            <!-- 👉 Add image here -->
+            <img src="{{ url_for('static', filename='convert_example.png') }}">
+
+            <p>
+            Subset construction converts an NFA into an equivalent DFA by treating
+            sets of NFA states as individual DFA states.
+            </p>
+
+            <h4>Steps:</h4>
+            <ol>
+                <li>Start with initial state {q₀}</li>
+                <li>Compute reachable states for each input</li>
+                <li>Create new DFA states as sets</li>
+                <li>Repeat until no new states appear</li>
+            </ol>
+
+            <p><b>Key Idea:</b> Each DFA state represents a subset of NFA states.</p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
