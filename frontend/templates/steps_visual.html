@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<a href="/visualizer" class="back-btn">⬅ Back</a>
+
+<h2>Step-by-Step DFA Construction (Graph View)</h2>
+
+{% for step in steps %}
+<div class="section-card">
+
+    <h3>Step {{ loop.index }}</h3>
+
+    <p>
+        <b>Current:</b>
+        {{ step.current_state | sort | join(',') if step.current_state else 'd' }}
+    </p>
+
+    <p><b>Input:</b> {{ step.symbol }}</p>
+
+    <p>
+        <b>Next:</b>
+        {{ step.next_state | sort | join(',') if step.next_state else 'd' }}
+    </p>
+
+    <img src="{{ url_for('static', filename=images[loop.index0]) }}">
+
+</div>
+{% endfor %}
+
+</body>
+</html>

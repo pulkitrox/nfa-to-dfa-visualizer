@@ -1,1 +1,12 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment
 .env
+
+# Generated images
+frontend/static/*.png
+
+# Step images
+frontend/static/step_*.png

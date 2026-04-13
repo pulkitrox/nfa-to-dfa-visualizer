@@ -6,7 +6,7 @@ import markdown
 from google import genai
 import os
 from dotenv import load_dotenv
-
+from visualize import draw_cumulative_steps
 load_dotenv()
 latest_steps = []
 latest_dfa = {}
@@ -16,6 +16,7 @@ latest_nfa_states = []
 latest_nfa_alphabet = []
 latest_nfa_start = ""
 latest_nfa_final = []
+latest_step_images = []
 def format_dfa_as_text(dfa_transitions):
     lines = []
 
@@ -57,6 +58,13 @@ def visualizer():
     return render_template("results.html", steps = latest_steps, dfa = latest_dfa, dfa_text = latest_dfa_text, start_state = latest_dfa_start, final_states= latest_dfa_final,
                            nfa_transitions = latest_nfa_transitions, nfa_states = latest_nfa_states, nfa_alphabet = latest_nfa_alphabet, nfa_start = latest_nfa_start,
                            nfa_final = latest_nfa_final)
+@app.route('/steps-visual')
+def steps_visual():
+    return render_template(
+        "steps_visual.html",
+        steps=latest_steps,
+        images=latest_step_images
+    )
 
 @app.route('/chatbot')
 def chatbot_page():
@@ -126,7 +134,7 @@ def convert(): # parses the input and extracts all information in required form,
             return render_template("index.html", error=errors)
         
         states = list(states)
-        alphabet = list(alphabet)
+        alphabet = sorted(list(alphabet))
 
         if start not in states:
                 raise ValueError("Start state not found in transitions")
@@ -137,6 +145,10 @@ def convert(): # parses the input and extracts all information in required form,
 
 
         dfa_transitions, steps = convert_nfa_to_dfa(states, alphabet, start, final, transitions)
+        step_images = draw_cumulative_steps(steps, final)
+
+        global latest_step_images
+        latest_step_images = step_images
         dfa_start = start
         draw_nfa(states, transitions, start, final)
         draw_dfa(dfa_transitions, start, final)

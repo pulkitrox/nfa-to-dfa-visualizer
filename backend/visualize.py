@@ -124,4 +124,68 @@ def draw_dfa(dfa_transitions, start, final):
         dot.attr(rankdir="LR")
         dot.render("frontend/static/dfa", format="png", cleanup=True)
 
-    
+def draw_cumulative_steps(steps, final_states):
+    from graphviz import Digraph
+
+    images = []
+
+    def label(s):
+        if not s:
+            return "d"
+        return ",".join(sorted(list(s)))
+
+    for i in range(len(steps)):
+
+        dot = Digraph(format='png')
+        dot.attr(rankdir="LR")
+
+        edge_map = {}  # (from, to) → [symbols]
+
+        # ---- Collect edges up to step i ----
+        for j in range(i + 1):
+            step = steps[j]
+
+            curr = label(step["current_state"])
+            nxt = label(step["next_state"])
+            sym = str(step["symbol"])
+
+            key = (curr, nxt)
+
+            if key not in edge_map:
+                edge_map[key] = []
+
+            edge_map[key].append(sym)
+
+            # ---- Nodes ----
+            if any(s in final_states for s in step["current_state"]):
+                dot.node(curr, shape="doublecircle")
+            else:
+                dot.node(curr)
+
+            if any(s in final_states for s in step["next_state"]):
+                dot.node(nxt, shape="doublecircle")
+            else:
+                dot.node(nxt)
+
+        # ---- Draw edges (merged labels) ----
+        for (curr, nxt), symbols in edge_map.items():
+
+            label_str = "/".join(sorted(set(symbols)))
+
+            # Highlight only newest edge
+            latest = steps[i]
+            latest_curr = label(latest["current_state"])
+            latest_nxt = label(latest["next_state"])
+
+            if curr == latest_curr and nxt == latest_nxt:
+                dot.edge(curr, nxt, label=label_str, color="red", penwidth="2")
+            else:
+                dot.edge(curr, nxt, label=label_str)
+
+        # ---- Render ----
+        filename = f"frontend/static/step_{i}"
+        dot.render(filename, cleanup=True)
+
+        images.append(f"step_{i}.png")
+
+    return images

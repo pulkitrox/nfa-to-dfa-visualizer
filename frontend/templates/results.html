@@ -87,7 +87,9 @@
 {% endfor %}
 
 </table>
-
+<form action="/steps-visual" method="get">
+    <input type="submit" value="Visualize Steps (Graph View)">
+</form>
 <h2>DFA Transition Table</h2>
 
 <table class="dfa-table">
@@ -97,7 +99,7 @@
     <th>State</th>
 
     {% set first = dfa.values() | list | first %}
-    {% for symbol in first.keys() %}
+    {% for symbol in first.keys() | sort %}
         <th>{{ symbol }}</th>
     {% endfor %}
 </tr>
