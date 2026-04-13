@@ -81,6 +81,8 @@ Construction Algorithm**.
 ## Subset Construction Steps
 
 The tool also displays the **step-by-step DFA construction process**.
+It creates a table of the subset process and a series of images displaying
+the creation of the final DFA.
 
 ![Construction Table](frontend/screenshots/subset.png)
 
@@ -112,17 +114,17 @@ project-root/
 │   ├── chatbot.py          # Gemini API integration for chatbot
 │
 ├── frontend/
-│   ├── templates/          # HTML templates (Jinja2)
-│   │   ├── index.html      # Input form for NFA
-│   │   ├── dashboard.html  # Main dashboard UI
-│   │   ├── results.html    # Visualization & steps display
-│   │   └── chatbot.html    # Chatbot interface
-│   │
-│   └── static/              # Static assets
-│   │    ├── css/            # Stylesheets
-│   │    ├── nfa.png         # Generated NFA graph
-│   │    └── dfa.png         # Generated DFA graph
-|   │
+│   ├── templates/            # HTML templates (Jinja2)
+│   │   ├── index.html        # Input form for NFA
+│   │   ├── dashboard.html    # Main dashboard UI
+│   │   ├── results.html      # NFA/DFA Visualization Display
+│   │   ├── chatbot.html      # Chatbot interface
+│   │   └── steps_visual.html # Subset Step Display
+│   └── static/               # Static assets
+│   │    ├── css/             # Stylesheets
+│   │    ├── nfa_example.png         
+│   │    ├── dfa_example.png        
+|   │    └── convert_example.png      
 |   └── screenshots/         # Images for README.md
 ├── .gitignore
 ├── requirements.txt        # Python dependencies
